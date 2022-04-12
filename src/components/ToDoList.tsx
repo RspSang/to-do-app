@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { toDoState, categoryState, toDoSelector } from "../atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { categoryState, toDoSelector, selectInputState } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
@@ -18,19 +18,18 @@ const Title = styled.div`
 `;
 
 function ToDoList() {
-  const toDos = useRecoilValue(toDoState);
   const newToDos = useRecoilValue(toDoSelector);
-  const [category, setCategory] = useRecoilState(categoryState);
+  const category = useRecoilValue(categoryState);
+  const [select, setSelect] = useRecoilState(selectInputState);
   const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
-    setCategory(event.currentTarget.value as any);
+    setSelect(event.currentTarget.value as any);
   };
-  console.log(category);
   return (
     <Container>
       <Title>To Dos</Title>
-      <select onInput={onInput}>
-        {toDos.map((toDo) => (
-          <option value={toDo.category}>{toDo.category}</option>
+      <select value={select as any} onInput={onInput}>
+        {category.map((oldCategory: any) => (
+          <option value={oldCategory}>{oldCategory}</option>
         ))}
       </select>
       <CreateToDo />
