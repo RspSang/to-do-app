@@ -17,6 +17,17 @@ const Title = styled.div`
   margin-top: 5rem;
 `;
 
+const Select = styled.select`
+  margin-top: 2rem;
+  width: 60%;
+  height: 4rem;
+  font-size: 2rem;
+  :focus {
+    outline: none;
+    border-color: #9147ff;
+  }
+`;
+
 function ToDoList() {
   const newToDos = useRecoilValue(toDoSelector);
   const category = useRecoilValue(categoryState);
@@ -27,11 +38,11 @@ function ToDoList() {
   return (
     <Container>
       <Title>To Dos</Title>
-      <select value={select as any} onInput={onInput}>
+      <Select value={select as any} onInput={onInput}>
         {category.map((oldCategory: any) => (
           <option value={oldCategory}>{oldCategory}</option>
         ))}
-      </select>
+      </Select>
       <CreateToDo />
       {newToDos?.map((toDo) => (
         <ToDo key={toDo.id} {...toDo} />

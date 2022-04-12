@@ -1,6 +1,52 @@
+import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import { categoryState, selectInputState, toDoState } from "../atoms";
+
+const Form = styled.form`
+  margin-top: 2rem;
+  display: flex;
+  width: 62%;
+`;
+
+const Text = styled.input`
+  height: 4rem;
+  width: 70%;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-size: 1.4rem;
+  padding: 0 1.2rem;
+  :focus {
+    outline: none;
+    border-color: #9147ff;
+  }
+`;
+
+const Category = styled.input`
+  margin-left: 0.5rem;
+  height: 4rem;
+  width: 30%;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-size: 1rem;
+  padding: 0 0.6rem;
+  :focus {
+    outline: none;
+    border-color: #9147ff;
+  }
+`;
+
+const Btn = styled.button`
+  margin-left: 0.5rem;
+  padding: 0.8em 3em;
+  height: 4rem;
+  background-color: #9147ff;
+  border-radius: 1rem;
+  font-size: 1rem;
+  :active {
+    transform: translateY(5px);
+  }
+`;
 
 interface IForm {
   category: string;
@@ -27,16 +73,16 @@ function CreateToDo() {
     setValue("toDo", "");
   };
   return (
-    <form onSubmit={handleSubmit(handleValid)}>
-      <input {...register("category")} placeholder="Write a category" />
-      <input
+    <Form onSubmit={handleSubmit(handleValid)}>
+      <Category {...register("category")} placeholder="Write a category" />
+      <Text
         {...register("toDo", {
           required: "Please write a To Do",
         })}
         placeholder="Write a to do"
       />
-      <button>Add</button>
-    </form>
+      <Btn>Add</Btn>
+    </Form>
   );
 }
 
