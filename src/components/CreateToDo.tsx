@@ -28,7 +28,7 @@ const Category = styled.input`
   width: 30%;
   border: 1px solid black;
   border-radius: 10px;
-  font-size: 1rem;
+  font-size: 1.4rem;
   padding: 0 0.6rem;
   :focus {
     outline: none;
@@ -74,7 +74,7 @@ function CreateToDo() {
   };
   return (
     <Form onSubmit={handleSubmit(handleValid)}>
-      <Category {...register("category")} placeholder="Write a category" />
+      <Category {...register("category")} placeholder="Category" />
       <Text
         {...register("toDo", {
           required: "Please write a To Do",
