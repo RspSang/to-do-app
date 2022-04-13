@@ -31,20 +31,32 @@ const Category = styled.div`
   text-align: center;
 `;
 
+const Delete = styled.button`
+  color: ${(props) => props.theme.bgColor};
+`;
+
 function ToDo({ text, category, id }: IToDo) {
   const setToDos = useSetRecoilState(toDoState);
-  const oldCategory = useRecoilValue(categoryState);
+  const setCategory = useSetRecoilState(categoryState);
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const {
       currentTarget: { name },
     } = event;
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
-      const newToDo = { text, id, category: name as any };
       return [
         ...oldToDos.slice(0, targetIndex),
-        newToDo,
         ...oldToDos.slice(targetIndex + 1),
+      ];
+    });
+    setCategory((oldCategory) => {
+      const targetIndex = oldCategory.findIndex(
+        (categorys) => categorys.category === category
+      );
+      console.log(targetIndex);
+      return [
+        ...oldCategory.slice(0, targetIndex),
+        ...oldCategory.slice(targetIndex + 1),
       ];
     });
   };
@@ -56,6 +68,9 @@ function ToDo({ text, category, id }: IToDo) {
       <Card>
         <Text>{text}</Text>
         <Category>{category}</Category>
+        <Delete name={text} onClick={onClick}>
+          x
+        </Delete>
       </Card>
 
       {/* {category !== Categories.DOING && (
