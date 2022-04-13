@@ -1,5 +1,5 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { categoryState, IToDo, toDoState } from "../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { categoryState, IToDo, selectInputState, toDoState } from "../atoms";
 import styled from "styled-components";
 
 const CardContainer = styled.li`
@@ -20,28 +20,37 @@ const Card = styled.div`
 const Text = styled.div`
   color: ${(props) => props.theme.bgColor};
   font-size: 2rem;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
 `;
 
 const Category = styled.div`
   background-color: #9147ff;
-  border-radius: 10px;
+  border-radius: 15px;
   color: ${(props) => props.theme.textColor};
   margin-right: 1rem;
   min-width: 3rem;
+  font-size: 1.5rem;
   text-align: center;
+  padding: 5px;
 `;
 
 const Delete = styled.button`
-  color: ${(props) => props.theme.bgColor};
+  margin-right: 2rem;
+  border-radius: 5px;
+  width: 2rem;
+
+  border-color: ${(props) => props.theme.bgColor};
+  padding: 5px;
 `;
 
 function ToDo({ text, category, id }: IToDo) {
-  const setToDos = useSetRecoilState(toDoState);
+  const [toDos, setToDos] = useRecoilState(toDoState);
   const setCategory = useSetRecoilState(categoryState);
+  const setSelect = useSetRecoilState(selectInputState);
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const {
-      currentTarget: { name },
-    } = event;
+    let result: any = [];
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
       return [
@@ -50,15 +59,24 @@ function ToDo({ text, category, id }: IToDo) {
       ];
     });
     setCategory((oldCategory) => {
-      const targetIndex = oldCategory.findIndex(
-        (categorys) => categorys.category === category
-      );
-      console.log(targetIndex);
-      return [
+      if (toDos.filter((toDo) => toDo.category === category).length > 1) {
+        result = [...oldCategory];
+        return result;
+      }
+      const targetIndex = oldCategory.findIndex((cat: any) => cat === category);
+      result = [
         ...oldCategory.slice(0, targetIndex),
         ...oldCategory.slice(targetIndex + 1),
       ];
+      return result;
     });
+    setSelect((oldSelect) =>
+      result.includes(oldSelect)
+        ? oldSelect
+        : result.length > 0
+        ? result[0]
+        : ""
+    );
   };
   // const aa = oldCategory.filter((old) => old.category !== category);
   // console.log(aa);
@@ -68,9 +86,7 @@ function ToDo({ text, category, id }: IToDo) {
       <Card>
         <Text>{text}</Text>
         <Category>{category}</Category>
-        <Delete name={text} onClick={onClick}>
-          x
-        </Delete>
+        <Delete onClick={onClick}>🗑</Delete>
       </Card>
 
       {/* {category !== Categories.DOING && (
